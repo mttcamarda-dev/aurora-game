@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aurora - Una Storia d'Amore ✨</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        .game-container {
+            max-width: 800px;
+            width: 100%;
+            background: linear-gradient(180deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+            backdrop-filter: blur(10px);
+            border-radius: 30px;
+            padding: 40px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.3),
+                        inset 0 1px 0 rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .game-container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,182,193,0.1) 0%, transparent 50%);
+            animation: auroras 15s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        @keyframes auroras {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(30px, -30px) rotate(120deg); }
+            66% { transform: translate(-20px, 20px) rotate(240deg); }
+        }
+
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 2s ease-in-out infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        .title-screen {
+            text-align: center;
+            color: white;
+            position: relative;
+            z-index: 1;
+        }
+
+        .title-screen h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 4rem;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+            text-shadow: 0 0 30px rgba(255,154,158,0.5);
+        }
+
+        .title-screen .subtitle {
+            font-size: 1.2rem;
+            color: rgba(255,255,255,0.7);
+            margin-bottom: 40px;
+            font-weight: 300;
+        }
+
+        .hearts-decoration {
+            font-size: 2rem;
+            margin: 20px 0;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .name-input-section {
+            margin: 30px 0;
+        }
+
+        .name-input-section label {
+            display: block;
+            color: rgba(255,255,255,0.9);
+            margin-bottom: 10px;
+            font-size: 1rem;
+        }
+
+        .name-input-section input {
+            width: 100%;
+            max-width: 300px;
+            padding: 15px 20px;
+            border: 2px solid rgba(255,182,193,0.3);
+            border-radius: 25px;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            font-size: 1.1rem;
+            font-family: 'Quicksand', sans-serif;
+            text-align: center;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .name-input-section input:focus {
+            outline: none;
+            border-color: #ff9a9e;
+            box-shadow: 0 0 20px rgba(255,154,158,0.3);
+        }
+
+        .name-input-section input::placeholder {
+            color: rgba(255,255,255,0.5);
+        }
+
+        .start-btn {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            border: none;
+            padding: 18px 50px;
+            font-size: 1.3rem;
+            font-family: 'Quicksand', sans-serif;
+            font-weight: 600;
+            color: #1a1a2e;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+            box-shadow: 0 10px 30px rgba(255,154,158,0.3);
+        }
+
+        .start-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(255,154,158,0.4);
+        }
+
+        .start-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Game Screen */
+        .game-screen {
+            display: none;
+            position: relative;
+            z-index: 1;
+        }
+
+        .scene-indicator {
+            text-align: center;
+            color: rgba(255,255,255,0.5);
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
+
+        .scene-title {
+            text-align: center;
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.5rem;
+            color: #fecfef;
+            margin-bottom: 30px;
+        }
+
+        .characters {
+            display: flex;
+            justify-content: center;
+            gap: 60px;
+            margin-bottom: 30px;
+        }
+
+        .character {
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .character.speaking {
+            transform: scale(1.05);
+        }
+
+        .avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 60px;
+            margin-bottom: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            border: 3px solid rgba(255,255,255,0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .avatar-lei {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+        }
+
+        .avatar-lui {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+        }
+
+        .character-name {
+            color: rgba(255,255,255,0.9);
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .dialogue-box {
+            background: rgba(255,255,255,0.08);
+            border-radius: 20px;
+            padding: 25px 30px;
+            margin-bottom: 25px;
+            border: 1px solid rgba(255,255,255,0.1);
+            position: relative;
+        }
+
+        .dialogue-speaker {
+            color: #ff9a9e;
+            font-weight: 600;
+            margin-bottom: 10px;
+            font-size: 1rem;
+        }
+
+        .dialogue-text {
+            color: rgba(255,255,255,0.95);
+            font-size: 1.15rem;
+            line-height: 1.8;
+        }
+
+        .scene-description {
+            color: rgba(255,255,255,0.6);
+            font-style: italic;
+            text-align: center;
+            margin-bottom: 25px;
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        .choices {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 25px;
+        }
+
+        .choice-btn {
+            background: rgba(255,255,255,0.08);
+            border: 2px solid rgba(255,182,193,0.3);
+            padding: 18px 25px;
+            border-radius: 15px;
+            color: white;
+            font-size: 1.05rem;
+            font-family: 'Quicksand', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .choice-btn:hover {
+            background: rgba(255,154,158,0.2);
+            border-color: #ff9a9e;
+            transform: translateX(10px);
+        }
+
+        .choice-letter {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            color: #1a1a2e;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .response-box {
+            background: linear-gradient(135deg, rgba(255,154,158,0.15) 0%, rgba(254,207,239,0.15) 100%);
+            border-radius: 20px;
+            padding: 25px 30px;
+            margin-top: 20px;
+            border: 1px solid rgba(255,154,158,0.3);
+            display: none;
+        }
+
+        .response-box.show {
+            display: block;
+            animation: fadeInUp 0.5s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .continue-btn {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.1rem;
+            font-family: 'Quicksand', sans-serif;
+            font-weight: 600;
+            color: #1a1a2e;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 25px;
+            display: none;
+        }
+
+        .continue-btn.show {
+            display: inline-block;
+            animation: fadeInUp 0.5s ease;
+        }
+
+        .continue-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(255,154,158,0.3);
+        }
+
+        /* Ending Screen */
+        .ending-screen {
+            display: none;
+            text-align: center;
+            color: white;
+            position: relative;
+            z-index: 1;
+        }
+
+        .ending-screen h2 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 3rem;
+            color: #fecfef;
+            margin-bottom: 30px;
+        }
+
+        .final-message {
+            font-size: 1.4rem;
+            line-height: 2;
+            color: rgba(255,255,255,0.95);
+            margin-bottom: 40px;
+        }
+
+        .final-message .highlight {
+            color: #ff9a9e;
+            font-weight: 600;
+        }
+
+        .achievement {
+            background: linear-gradient(135deg, rgba(255,215,0,0.2) 0%, rgba(255,154,158,0.2) 100%);
+            border: 2px solid rgba(255,215,0,0.5);
+            border-radius: 20px;
+            padding: 30px;
+            margin-top: 30px;
+            animation: glow 2s ease-in-out infinite;
+        }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(255,215,0,0.3); }
+            50% { box-shadow: 0 0 40px rgba(255,215,0,0.5); }
+        }
+
+        .achievement-title {
+            font-size: 1rem;
+            color: rgba(255,255,255,0.6);
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 10px;
+        }
+
+        .achievement-text {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #ffd700 0%, #ff9a9e 50%, #fecfef 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .replay-btn {
+            background: transparent;
+            border: 2px solid rgba(255,255,255,0.3);
+            padding: 15px 40px;
+            font-size: 1rem;
+            font-family: 'Quicksand', sans-serif;
+            font-weight: 600;
+            color: white;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 30px;
+        }
+
+        .replay-btn:hover {
+            background: rgba(255,255,255,0.1);
+            border-color: rgba(255,255,255,0.5);
+        }
+
+        .floating-hearts {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 100;
+            overflow: hidden;
+        }
+
+        .floating-heart {
+            position: absolute;
+            font-size: 2rem;
+            animation: floatUp 4s ease-out forwards;
+            opacity: 0;
+        }
+
+        @keyframes floatUp {
+            0% {
+                opacity: 1;
+                transform: translateY(100vh) rotate(0deg);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-100px) rotate(360deg);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .game-container {
+                padding: 25px;
+                border-radius: 20px;
+            }
+
+            .title-screen h1 {
+                font-size: 2.8rem;
+            }
+
+            .characters {
+                gap: 30px;
+            }
+
+            .avatar {
+                width: 90px;
+                height: 90px;
+                font-size: 45px;
+            }
+
+            .scene-title {
+                font-size: 2rem;
+            }
+
+            .dialogue-text {
+                font-size: 1rem;
+            }
+
+            .choice-btn {
+                padding: 15px 20px;
+                font-size: 0.95rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="stars" id="stars"></div>
+    <div class="floating-hearts" id="floatingHearts"></div>
+
+    <div class="game-container">
+        <!-- Title Screen -->
+        <div class="title-screen" id="titleScreen">
+            <h1>Aurora</h1>
+            <p class="subtitle">Una storia scritta per te</p>
+            <div class="hearts-decoration">💕✨💕</div>
+
+            <div class="name-input-section">
+                <label for="nomeLei">Il tuo nome:</label>
+                <input type="text" id="nomeLei" placeholder="Il tuo nome...">
+
+                <label for="nomeLui">Il nome di lui:</label>
+                <input type="text" id="nomeLui" placeholder="Il suo nome...">
+            </div>
+
+            <button class="start-btn" onclick="startGame()">Inizia la Storia 💖</button>
+        </div>
+
+        <!-- Game Screen -->
+        <div class="game-screen" id="gameScreen">
+            <div class="scene-indicator" id="sceneIndicator">Scena 1 di 5</div>
+            <h2 class="scene-title" id="sceneTitle">La Panchina</h2>
+
+            <div class="characters">
+                <div class="character" id="charLei">
+                    <div class="avatar avatar-lei">👩</div>
+                    <div class="character-name" id="nameLei">Lei</div>
+                </div>
+                <div class="character" id="charLui">
+                    <div class="avatar avatar-lui">👨</div>
+                    <div class="character-name" id="nameLui">Lui</div>
+                </div>
+            </div>
+
+            <p class="scene-description" id="sceneDescription"></p>
+
+            <div class="dialogue-box">
+                <div class="dialogue-speaker" id="dialogueSpeaker"></div>
+                <div class="dialogue-text" id="dialogueText"></div>
+            </div>
+
+            <div class="choices" id="choices"></div>
+
+            <div class="response-box" id="responseBox">
+                <div class="dialogue-speaker" id="responseSpeaker"></div>
+                <div class="dialogue-text" id="responseText"></div>
+            </div>
+
+            <button class="continue-btn" id="continueBtn" onclick="nextScene()">Continua →</button>
+        </div>
+
+        <!-- Ending Screen -->
+        <div class="ending-screen" id="endingScreen">
+            <h2>✨ Il Nostro Momento ✨</h2>
+            <div class="final-message" id="finalMessage"></div>
+            <div class="achievement">
+                <div class="achievement-title">🏆 Hai Sbloccato</div>
+                <div class="achievement-text">Noi Due 💖</div>
+            </div>
+            <button class="replay-btn" onclick="replayGame()">Rivivi la Storia 🔄</button>
+        </div>
+    </div>
+
+    <script>
+        // Create stars background
+        function createStars() {
+            const starsContainer = document.getElementById('stars');
+            for (let i = 0; i < 100; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.width = Math.random() * 3 + 1 + 'px';
+                star.style.height = star.style.width;
+                star.style.animationDelay = Math.random() * 2 + 's';
+                starsContainer.appendChild(star);
+            }
+        }
+        createStars();
+
+        // Game variables
+        let playerName = "Lei";
+        let partnerName = "Lui";
+        let currentScene = 0;
+
+        // Game scenes data
+        const scenes = [
+            {
+                title: "La Panchina al Tramonto",
+                description: "È una sera d'estate. Il sole sta tramontando e colora il cielo di rosa e arancione. Siete seduti sulla vostra panchina preferita al parco, quella un po' nascosta vicino al laghetto.",
+                speaker: "partner",
+                dialogue: "Sai cosa stavo pensando? Che questa panchina ormai è ufficialmente nostra. Tipo, se qualcuno si siede qui quando non ci siamo... è illegale.",
+                choices: [
+                    { letter: "A", text: "Ridere e appoggiare la testa sulla sua spalla", response: "Lui sorride e ti stringe un po' più vicina. «Ecco, così. Questo è il mio posto preferito nel mondo. No aspetta, il mio posto preferito è ovunque tu sia. La panchina è solo un bonus.»" },
+                    { letter: "B", text: "\"Dovremmo mettere una targhetta con i nostri nomi!\"", response: "«Geniale! Scriviamo: Proprietà di noi due. Vietato sedersi senza permesso scritto.» Ti guarda con gli occhi che brillano. «Scherzo. Però l'idea della targhetta... non è male. Tipo nei film.»" },
+                    { letter: "C", text: "Prendergli la mano senza dire nulla", response: "Lui intreccia le dita con le tue e le stringe delicatamente. Resta in silenzio per un momento, poi sussurra: «Non ho bisogno di dire niente quando siamo così, vero? Tu capisci sempre.»" }
+                ]
+            },
+            {
+                title: "La Passeggiata Serale",
+                description: "State camminando per le stradine del centro, quelle illuminate dalle lucine calde dei lampioni. L'aria è fresca e profuma di primavera. Lui si ferma davanti a una vetrina.",
+                speaker: "partner",
+                dialogue: "Aspetta aspetta. Guarda quella cosa lì. No, non il maglione brutto. Quello accanto. Ti ricorda qualcosa?",
+                choices: [
+                    { letter: "A", text: "Avvicinarti alla vetrina incuriosita", response: "È un piccolo carillon con due figurine che ballano. «È uguale a quello che abbiamo visto al mercatino, ti ricordi? Quando hai detto che un giorno avresti voluto una casa piena di cose così.» Ti guarda tenero. «Mi ricordo tutto di quel giorno.»" },
+                    { letter: "B", text: "\"Mmh... il tuo senso della moda discutibile?\"", response: "Lui scoppia a ridere. «Ehi! Il mio stile è... unico. Comunque no, guarda meglio.» Indica un piccolo oggetto. «Mi ha fatto pensare a te. A noi. A quanto sono fortunato.» E ti fa l'occhiolino." },
+                    { letter: "C", text: "Prenderlo sottobraccio e sorridere", response: "Lui si illumina. «Sai che quando mi prendi così mi sento tipo in un film francese? Solo che invece del finale triste, il nostro è bellissimo. Anzi, non è neanche un finale. È solo l'inizio.»" }
+                ]
+            },
+            {
+                title: "Sera a Casa",
+                description: "Siete sul divano, avvolti in una coperta. La TV è accesa ma nessuno la sta davvero guardando. Fuori piove leggermente e il rumore delle gocce sui vetri crea una melodia dolce.",
+                speaker: "partner",
+                dialogue: "Sai qual è la cosa più bella delle serate così? Che non dobbiamo fare niente di speciale. Stare qui con te È già la cosa più speciale.",
+                choices: [
+                    { letter: "A", text: "Accoccolarti più vicina a lui", response: "Lui ti avvolge meglio nella coperta e ti bacia la fronte. «Perfetto. Ora non ti muovere più per le prossime... boh, tre ore? Cinque? Per sempre va bene come tempistica?»" },
+                    { letter: "B", text: "\"Anche se russi durante i film?\"", response: "«IO NON RUSSO! ...Okay forse un pochino. Ma è perché mi rilasso! È colpa tua che mi fai stare così bene.» Ti fa il solletico. «E poi tu parli nel sonno, quindi siamo pari.»" },
+                    { letter: "C", text: "Mettergli una mano sul cuore", response: "Lui mette la sua mano sopra la tua. «Lo senti? Batte un po' più forte quando sei vicina. Non è una frase fatta, è proprio vero. Sei il mio battito preferito.»" }
+                ]
+            },
+            {
+                title: "Sotto le Stelle",
+                description: "Vi siete sdraiati su una coperta in giardino. Il cielo è limpido e pieno di stelle. Ogni tanto ne passa una cadente, ma siete troppo impegnati a parlare per esprimere desideri.",
+                speaker: "partner",
+                dialogue: "Secondo te quante stelle ci sono? Tipo... miliardi? Non importa. Nessuna brilla come i tuoi occhi. Sì, l'ho detta. Sì, è sdolcinata. No, non me ne vergogno.",
+                choices: [
+                    { letter: "A", text: "Ridere e nascondere il viso", response: "«No no, non ti nascondere! Mi piace quando arrossisci. È adorabile. Sei adorabile. Tutto di te è adorabile. Okay la smetto, ma solo perché mi stai guardando così.»" },
+                    { letter: "B", text: "\"Quante volte l'hai provata allo specchio?\"", response: "«Mai! ...Va bene, forse una volta. O due. Ma solo perché volevo essere sicuro di non sembrare un totale idiota mentre te la dicevo.» Ride. «Ne è valsa la pena per il tuo sorriso.»" },
+                    { letter: "C", text: "Indicare una stella: \"Quella è la nostra\"", response: "Lui la fissa intensamente. «Perfetto. Da ora è ufficialmente nostra. La chiameremo... aspetta... 'Stella di Noi Due'. Okay il nome fa schifo, ma il significato è bellissimo.» Ti stringe la mano." }
+                ]
+            },
+            {
+                title: "Il Nostro Momento",
+                description: "È tardi. Il mondo sembra dormire, ma voi siete ancora svegli, persi nei vostri pensieri e nelle vostre parole. Lui ti guarda con un'intensità diversa dal solito.",
+                speaker: "partner",
+                dialogue: "Posso dirti una cosa? Una cosa seria, per una volta.",
+                choices: [
+                    { letter: "A", text: "Annuire dolcemente", response: null },
+                    { letter: "B", text: "\"Solo se non mi fai piangere\"", response: null },
+                    { letter: "C", text: "Guardarlo negli occhi in silenzio", response: null }
+                ]
+            }
+        ];
+
+        const finalSpeech = `Sai, prima di te pensavo di sapere cosa fosse la felicità.
+
+Poi sei arrivata tu, e ho capito che non ne avevo idea.
+
+Con te ho scoperto che l'amore non è solo farfalle nello stomaco. È sentirsi a casa in una persona. È ridere delle stesse stupidaggini. È voler essere migliori, insieme.
+
+Tu sei la mia persona preferita. Il mio primo pensiero al mattino. L'ultimo sorriso della sera.
+
+Non so cosa ci riserva il futuro, ma so una cosa per certo:
+
+<span class="highlight">Voglio viverlo tutto con te.</span>
+
+Ti amo. ❤️`;
+
+        // Game functions
+        function startGame() {
+            playerName = document.getElementById('nomeLei').value.trim() || "Amore";
+            partnerName = document.getElementById('nomeLui').value.trim() || "Lui";
+
+            document.getElementById('nameLei').textContent = playerName;
+            document.getElementById('nameLui').textContent = partnerName;
+
+            document.getElementById('titleScreen').style.display = 'none';
+            document.getElementById('gameScreen').style.display = 'block';
+
+            currentScene = 0;
+            loadScene(currentScene);
+        }
+
+        function loadScene(sceneIndex) {
+            const scene = scenes[sceneIndex];
+
+            document.getElementById('sceneIndicator').textContent = `Scena ${sceneIndex + 1} di 5`;
+            document.getElementById('sceneTitle').textContent = scene.title;
+            document.getElementById('sceneDescription').textContent = scene.description;
+
+            const speakerName = scene.speaker === 'partner' ? partnerName : playerName;
+            document.getElementById('dialogueSpeaker').textContent = speakerName;
+            document.getElementById('dialogueText').textContent = scene.dialogue;
+
+            // Highlight speaking character
+            document.getElementById('charLei').classList.remove('speaking');
+            document.getElementById('charLui').classList.remove('speaking');
+            if (scene.speaker === 'partner') {
+                document.getElementById('charLui').classList.add('speaking');
+            } else {
+                document.getElementById('charLei').classList.add('speaking');
+            }
+
+            // Load choices
+            const choicesContainer = document.getElementById('choices');
+            choicesContainer.innerHTML = '';
+
+            scene.choices.forEach((choice, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'choice-btn';
+                btn.innerHTML = `<span class="choice-letter">${choice.letter}</span><span>${choice.text}</span>`;
+                btn.onclick = () => selectChoice(index);
+                choicesContainer.appendChild(btn);
+            });
+
+            // Hide response and continue button
+            document.getElementById('responseBox').classList.remove('show');
+            document.getElementById('continueBtn').classList.remove('show');
+        }
+
+        function selectChoice(choiceIndex) {
+            const scene = scenes[currentScene];
+            const choice = scene.choices[choiceIndex];
+
+            // Disable all choices
+            document.querySelectorAll('.choice-btn').forEach(btn => {
+                btn.style.pointerEvents = 'none';
+                btn.style.opacity = '0.5';
+            });
+
+            // Highlight selected choice
+            document.querySelectorAll('.choice-btn')[choiceIndex].style.opacity = '1';
+            document.querySelectorAll('.choice-btn')[choiceIndex].style.borderColor = '#ff9a9e';
+            document.querySelectorAll('.choice-btn')[choiceIndex].style.background = 'rgba(255,154,158,0.2)';
+
+            // Create floating hearts
+            createFloatingHearts();
+
+            // Check if this is the final scene
+            if (currentScene === 4) {
+                // Final scene - go to ending
+                setTimeout(() => {
+                    showEnding();
+                }, 1000);
+            } else {
+                // Show response
+                document.getElementById('responseSpeaker').textContent = partnerName;
+                document.getElementById('responseText').textContent = choice.response;
+                document.getElementById('responseBox').classList.add('show');
+
+                // Update speaking character
+                document.getElementById('charLei').classList.remove('speaking');
+                document.getElementById('charLui').classList.add('speaking');
+
+                // Show continue button
+                setTimeout(() => {
+                    document.getElementById('continueBtn').classList.add('show');
+                }, 500);
+            }
+        }
+
+        function nextScene() {
+            currentScene++;
+            if (currentScene < scenes.length) {
+                loadScene(currentScene);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        function showEnding() {
+            document.getElementById('gameScreen').style.display = 'none';
+            document.getElementById('endingScreen').style.display = 'block';
+
+            let message = finalSpeech.replace('Ti amo', `Ti amo, ${playerName}`);
+            document.getElementById('finalMessage').innerHTML = message;
+
+            // Create lots of floating hearts for the finale
+            for (let i = 0; i < 20; i++) {
+                setTimeout(() => createFloatingHearts(), i * 200);
+            }
+        }
+
+        function createFloatingHearts() {
+            const container = document.getElementById('floatingHearts');
+            const hearts = ['💖', '💕', '💗', '💓', '✨', '💝'];
+
+            for (let i = 0; i < 5; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'floating-heart';
+                heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+                heart.style.left = Math.random() * 100 + '%';
+                heart.style.animationDuration = (3 + Math.random() * 2) + 's';
+                container.appendChild(heart);
+
+                setTimeout(() => heart.remove(), 4000);
+            }
+        }
+
+        function replayGame() {
+            document.getElementById('endingScreen').style.display = 'none';
+            document.getElementById('titleScreen').style.display = 'block';
+            currentScene = 0;
+        }
+    </script>
+</body>
+</html>
